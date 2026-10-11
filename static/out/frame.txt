@@ -1,0 +1,5 @@
+         rain   days
+city                
+Lyon   820.25  109.5
+Nice   731.20   67.0
+Paris  619.45  114.5

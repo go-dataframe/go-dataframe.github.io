@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ .Site.Title }} — labelled tables in pure Go</title>
+<meta name="description" content="{{ .Site.Params.description }}">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+{{ partial "styles.html" . }}
+<style>
+/* The frame's own text/html output (static/out/frame.html), as a notebook
+   shows it: numbers right-aligned, labels left. */
+.dfhtml table.dataframe{border-collapse:collapse;margin:0 auto;font-size:14px;color:var(--ink)}
+.dfhtml table.dataframe th,.dfhtml table.dataframe td{padding:6px 12px;border:1px solid var(--line)}
+.dfhtml table.dataframe td{text-align:right;font-variant-numeric:tabular-nums}
+.dfhtml table.dataframe thead th{background:var(--bg-soft)}
+</style>
+</head>
+<body class="lm">
+  <header class="nav"><div class="wrap">
+    <a class="brand" href="/"><img class="glyph" src="/img/logo.svg" width="32" height="32" alt="go-dataframe logo"> {{ .Site.Title }}</a>
+    <nav><a href="#output">Example</a><a href="#features">Why</a><a href="#exact">Checks</a><a href="#speed">Speed</a><a href="#repos">Repositories</a></nav>
+    {{ partial "theme-toggle.html" . }}
+  </div></header>
+  {{ partial "fork-ribbon.html" "https://github.com/go-dataframe/dataframe" }}
+
+  <div class="hero"><div class="wrap">
+    <div>
+      <h1 class="head">Labelled tables, in pure Go.<br><span class="accent">Recorded answers, checked case by case.</span></h1>
+      <p class="sub">go-dataframe is the table library of the Go scientific stack built on <b>go-ndarray</b>: <code>Series</code>, <code>DataFrame</code> and <code>Index</code>, with selection, missing data, <b>group-by, joins, reshaping and time series</b>, a <b>fast CSV reader</b>, <b>Arrow and Parquet</b>, notebook display and plots. Numeric columns are go-ndarray arrays, handed out without copying. No Python, no cgo.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://go-dataframe.github.io/docs/">{{ partial "icons/book.html" . }}Read the documentation →</a>
+      </div>
+      <div class="trust"><span><b>173</b> cases replayed against pandas 3.0</span><span><b>~10×</b> pandas' C parser on CSV</span><span><b>100%</b> test coverage</span></div>
+    </div>
+    {{/* figure/main.go of this repository, from func main on, read at build
+         time: the program whose output is in #output. */}}
+    {{- $src := readFile "figure/main.go" -}}
+    {{- $body := index (findRE `(?s)func main\(\) \{.*?\n\}\n` $src) 0 -}}
+    <div class="term">
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="t">main.go</span></div>
+<pre style="white-space:pre;overflow-x:auto;tab-size:4">{{ $body }}</pre>
+    </div>
+  </div></div>
+
+  <div class="strip"><div class="wrap">
+    <span class="lead-line">{{ len .Site.Params.repos }} repositories — <b>one library</b>: <code>go get github.com/go-dataframe/dataframe</code></span>
+    <div class="mods">{{ range .Site.Params.repos }}<a href="{{ .href }}">{{ .name }}</a>{{ end }}</div>
+  </div></div>
+
+  <section id="output" style="padding-top:10px"><div class="wrap">
+    <span class="eyebrow">Ask it, do not take our word</span>
+    <h2>The program above, <i>actually run</i>.</h2>
+    <p class="lead">What it prints, laid out as pandas prints a frame; the table a notebook cell shows for the same frame, which is its <code>Display</code> <code>text/html</code>; and the frame drawn by <code>dfplot</code> with go-plot. All three are unedited, and the CI runs the program again and fails if one byte differs.</p>
+    {{/* static/out/frame.txt, static/out/frame.html and static/img/figure.svg:
+         written by figure/main.go with github.com/go-dataframe/dataframe
+         v0.1.0. The ci workflow writes them again; never edit them by hand. */}}
+    <div class="grid" style="margin-top:22px">
+      <div class="term">
+        <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="t">$ go run .</span></div>
+<pre style="white-space:pre;overflow-x:auto">{{ readFile "static/out/frame.txt" }}</pre>
+      </div>
+      <div class="card dfhtml" style="display:flex;align-items:center;justify-content:center">{{ readFile "static/out/frame.html" | safeHTML }}</div>
+    </div>
+    <div class="card" style="margin-top:18px;padding:18px;background:#fff;text-align:center">
+      <img src="/img/figure.svg" alt="Mean yearly rainfall of three cities as bars, drawn by dfplot with go-plot from the frame above" style="max-width:100%;height:auto" width="640" height="480">
+    </div>
+  </div></section>
+
+  <section id="features"><div class="wrap">
+    <span class="eyebrow">Why go-dataframe</span>
+    <h2>The table operations notebooks <i>are made of</i>.</h2>
+    <p class="lead">Reading a file, selecting, cleaning, grouping, joining, reshaping and plotting: each operation gives pandas' answer — values, dtypes, index and row order — under a Go name, and fallible calls return an error rather than raising.</p>
+    <div class="grid">
+      <div class="card"><div class="ico">🗂️</div><h3>Series, DataFrame, Index</h3><p>Typed columns sharing one index of row labels; <code>Loc</code>, <code>Iloc</code>, boolean filters and <code>Query</code>. Every value is immutable: operations share the columns they did not change.</p></div>
+      <div class="card"><div class="ico">🧩</div><h3>Group-by, joins, reshaping</h3><p><code>GroupBy</code> with <code>Agg</code>, <code>Merge</code> and <code>Concat</code>, <code>Pivot</code>, <code>PivotTable</code>, <code>Melt</code>, <code>Stack</code> and <code>Unstack</code>.</p></div>
+      <div class="card"><div class="ico">🕒</div><h3>Time series</h3><p><code>ToDatetime</code>, <code>Resample</code>, periods, the <code>Dt</code> accessor, <code>Shift</code>, <code>Diff</code>, <code>CumSum</code> and rolling windows.</p></div>
+      <div class="card"><div class="ico">📄</div><h3>A fast CSV reader</h3><p>Typed columns, column selection, row limits and dates parsed on request; about ten times pandas' C parser on ten million rows.</p></div>
+      <div class="card"><div class="ico">🏹</div><h3>Arrow and Parquet</h3><p><code>arrowio</code> reads and writes Arrow IPC and Feather, <code>parquetio</code> Parquet, both over apache/arrow-go.</p></div>
+      <div class="card"><div class="ico">🧮</div><h3>On go-ndarray</h3><p>Numeric columns are go-ndarray arrays, handed out without copying: <code>df.Values()</code> is an <code>*ndarray.Array</code>.</p></div>
+      <div class="card"><div class="ico">📓</div><h3>Notebook display and plots</h3><p><code>Display</code> gives a notebook the text and the HTML table; <code>dfplot</code> draws lines, bars, histograms, areas and scatter plots with go-plot.</p></div>
+      <div class="card"><div class="ico">⚖️</div><h3>BSD-3-Clause</h3><p>Every repository of the organization.</p></div>
+    </div>
+  </div></section>
+
+  <section id="exact" style="padding-top:10px"><div class="wrap">
+    <span class="eyebrow">What is checked</span>
+    <h2>{{ len .Site.Params.checks }} kinds of check, <i>none of them a promise</i>.</h2>
+    <p class="lead">The behavioural reference is pandas: its answers are recorded by scripts, committed, and replayed by the tests.</p>
+    <div class="grid">
+      {{ range .Site.Params.checks }}
+      <div class="card"><h3>{{ .name }}</h3><p>{{ .what | markdownify }}</p></div>
+      {{ end }}
+    </div>
+  </div></section>
+
+  <section id="speed" style="padding-top:10px"><div class="wrap">
+    <span class="eyebrow">Speed</span>
+    <h2>Faster than pandas, <i>and polars is faster still</i>.</h2>
+    <p class="lead">Medians of interleaved runs on 10⁷ rows, on a shared Apple M4 Max under load (load average 13–18), from the library's <code>docs/perf.md</code>. Milliseconds. The row in the library's colour is where pandas is faster. polars is faster than go-dataframe on every row but the CSV read with dates parsed.</p>
+    <div class="tablewrap">
+      <table class="bench">
+        <thead><tr><th>operation</th><th>go-dataframe</th><th>pandas 3.0</th><th>polars</th></tr></thead>
+        <tbody>
+          <tr class="win"><td><code>read_csv</code> (5 mixed columns)</td><td>407</td><td>4220 (C) / 525 (pyarrow)</td><td>360</td></tr>
+          <tr class="win"><td><code>read_csv</code>, dates parsed</td><td>362</td><td>5900</td><td>417</td></tr>
+          <tr class="win"><td><code>sort_values</code> (stable, float key)</td><td>446</td><td>973</td><td>298</td></tr>
+          <tr class="win"><td><code>merge</code> (inner, int key)</td><td>161</td><td>234</td><td>55</td></tr>
+          <tr class="win"><td><code>groupby("int key").sum()</code></td><td>88</td><td>103</td><td>69</td></tr>
+          <tr class="win"><td><code>df[df.x &gt; 0.5]</code></td><td>74</td><td>75</td><td>20</td></tr>
+          <tr class="lose"><td><code>groupby("str key").sum()</code></td><td>222</td><td>204</td><td>60</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead" style="margin-top:14px">Memory is at par with pandas for numeric columns and worse for strings: a Go <code>[]string</code> costs 16 bytes a value, where pandas 3 and polars use Arrow-style buffers. The benchmark table takes 400 MB here, 349 MB in pandas, 269 MB in polars.</p>
+  </div></section>
+
+  <section id="repos" style="padding-top:20px"><div class="wrap">
+    <span class="eyebrow">Repositories</span>
+    <h2>What is here.</h2>
+    <div class="road">
+      {{ range .Site.Params.repos }}
+      <div class="ph">
+        <div class="top"><h4><a href="{{ .href }}">{{ .name }}</a></h4><span class="tag active">{{ .kind }}</span></div>
+        <p>{{ .blurb | safeHTML }}</p>
+      </div>
+      {{ end }}
+    </div>
+  </div></section>
+
+  <section id="eco" style="padding-top:6px"><div class="wrap">
+    <div class="band">
+      <h2>Tables for the Go scientific stack.</h2>
+      <p>go-dataframe keeps its numbers in <a href="https://github.com/go-ndarray/ndarray"><u>go-ndarray</u></a> arrays, draws them with <a href="https://github.com/go-plot/plot"><u>go-plot</u></a>, and a <a href="https://github.com/go-notebook/notebook"><u>go-notebook</u></a> cell shows a frame as a table. What differs from pandas on purpose, and what is not done yet, is in the <a href="https://go-dataframe.github.io/docs/"><u>documentation</u></a>.</p>
+      <a class="btn btn-ghost" href="https://github.com/go-dataframe/dataframe">{{ partial "icons/github.html" . }}Read the source on GitHub →</a>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap"><span>go-dataframe · <a href="https://github.com/go-dataframe">go-dataframe on GitHub</a> · BSD-3-Clause</span><span>rows in · answers out</span></div></footer>
+</body>
+</html>
