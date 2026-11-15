@@ -27,10 +27,9 @@
   <div class="hero"><div class="wrap">
     <div>
       <h1 class="head">Labelled tables, in pure Go.<br><span class="accent">Recorded answers, checked case by case.</span></h1>
-      <p class="sub">go-dataframe is the table library of the Go scientific stack built on <b>go-ndarray</b>: <code>Series</code>, <code>DataFrame</code> and <code>Index</code>, with selection, missing data, <b>group-by, joins, reshaping and time series</b>, a <b>fast CSV reader</b>, <b>Arrow and Parquet</b>, notebook display and plots. Numeric columns are go-ndarray arrays, handed out without copying. No Python, no cgo.</p>
-      <div class="cta">
-        <a class="btn btn-primary" href="https://go-dataframe.github.io/docs/">{{ partial "icons/book.html" . }}Read the documentation →</a>
-      </div>
+      <p class="sub">go-dataframe is the table library of the Go scientific stack built on <b>go-ndarray</b>: <code>Series</code>, <code>DataFrame</code> and <code>Index</code>, with selection, missing data, <b>group-by, joins, reshaping and time series</b>, a <b>fast CSV reader</b>, <b>Arrow and Parquet</b>, notebook display and plots. Numeric columns are go-ndarray arrays, handed out without copying. No Python, {{ if not (partial "mantra-on.html" $) }}no cgo{{ end }}.</p>
+      {{/* [[params.cta]] in hugo.toml: the kit renders the row */}}
+      {{ partial "cta.html" . }}
       <div class="trust"><span><b>173</b> cases replayed against pandas 3.0</span><span><b>~10×</b> pandas' C parser on CSV</span><span><b>100%</b> test coverage</span></div>
     </div>
     {{/* figure/main.go of this repository, from func main on, read at build
@@ -79,7 +78,7 @@
       <div class="card"><div class="ico">🏹</div><h3>Arrow and Parquet</h3><p><code>arrowio</code> reads and writes Arrow IPC and Feather, <code>parquetio</code> Parquet, both over apache/arrow-go.</p></div>
       <div class="card"><div class="ico">🧮</div><h3>On go-ndarray</h3><p>Numeric columns are go-ndarray arrays, handed out without copying: <code>df.Values()</code> is an <code>*ndarray.Array</code>.</p></div>
       <div class="card"><div class="ico">📓</div><h3>Notebook display and plots</h3><p><code>Display</code> gives a notebook the text and the HTML table; <code>dfplot</code> draws lines, bars, histograms, areas and scatter plots with go-plot.</p></div>
-      <div class="card"><div class="ico">⚖️</div><h3>BSD-3-Clause</h3><p>Every repository of the organization.</p></div>
+      {{ if not (partial "mantra-on.html" $) }}<div class="card"><div class="ico">⚖️</div><h3>BSD-3-Clause</h3><p>Every repository of the organization.</p></div>{{ end }}
     </div>
   </div></section>
 

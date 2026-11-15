@@ -53,7 +53,7 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
   what = "100% statement coverage of the whole module under `-race`, on Linux, macOS and Windows."
 [[params.checks]]
   name = "Six architectures"
-  what = "Tests run natively on amd64 and arm64 and under qemu on riscv64, loong64, ppc64le and s390x, which is big-endian."
+  what = "Tests run on every architecture listed above, including a big-endian one."
 [[params.checks]]
   name = "Differences, listed"
   what = "What does not follow pandas does so on purpose, and is listed in the design document, not left to be discovered."
@@ -76,3 +76,13 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
   chipBgDark = "rgba(238,143,207,.14)"
   chipBorderDark = "rgba(238,143,207,.32)"
   chipFgDark = "#f6c1e5"
+
+# The hero's buttons, rendered by landingkit's cta.html in the kit's order.
+[[params.cta]]
+  kind  = "docs"
+  href  = "https://go-dataframe.github.io/docs/"
+  label = "Read the documentation →"
+
+# The architectures the tests RUN on, read from the library's CI.
+[params.mantra]
+  goarch = ["amd64", "arm64", "riscv64", "loong64", "ppc64le", "s390x"]
